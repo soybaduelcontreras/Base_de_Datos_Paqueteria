@@ -1,0 +1,76 @@
+-- Un trigger en Oracle SQL es un bloque de codigo (escrito en PL/SQL que se ejecuta automaticamente en respuesta a un
+-- evento especifico que ocurre en una tabla; como una operacion de insercion (INSERT), actualizacion (UPDATE) o
+-- eliminacion (DELETE). Su funcion principal es automatizar tareas, hacer cumplir las reglas de negocio, validar datos,
+-- auditar cambios o mantener la integridad sin necesidad de intervencion manual
+
+--crear la biracora de la tabla CLIENTES
+
+CREATE OR REPLACE TRIGGER TRG_CLIENTES_PA
+AFTER INSERT OR UPDATE ON CLIENTES FOR EACH ROW
+DECLARE
+    V_ACCION VARCHAR2(10) := '';
+    V_FECHA_CREACION DATE := NULL;
+    V_FECHA_MODIFICACION DATE := NULL;
+BEGIN
+    IF INSERTING THEN
+        V_ACCION := 'INSERT';
+        V_FECHA_CREACION := SYSDATE;
+    ELSIF UPDATING THEN
+      V_ACCION := 'UPDATE';
+      V_FECHA_MODIFICACION := SYSDATE;
+    END IF;
+    INSERT INTO CLIENTES_BIT (ID_CLIENTE_BIT, ID_CLIENTE, NOMBRE, APATERNO, AMATERNO, DIRECCION, FECHA_ALTA, FECHA_CREACION, FECHA_MODIFICACION, ACCION, IP)
+     VALUES(
+            SEC_ID_CLIENTE_BIT.NEXTVAL, :NEW.ID_CLIENTE, :NEW.NOMBRE, :NEW.APATERNO, :NEW.AMATERNO, :NEW.DIRECCION, :NEW.FECHA_ALTA,
+            V_FECHA_CREACION, V_FECHA_MODIFICACION, V_ACCION, FN_GET_IP
+      );
+END;
+--------------------------------------------------------------------------------------------------------------------------------------------
+--crear la biracora de la tabla PAQUETES
+
+CREATE OR REPLACE TRIGGER TRIG_PAQUETES_PA
+AFTER INSERT OR UPDATE ON REMITENTES FOR EACH ROW
+DECLARE
+ V_ACCION VARCHAR2(10) := '';
+ V_FECHA_CREACION DATE := NULL;
+ V_FECHA_MODIFICACION DATE := NULL;
+BEGIN
+    IF INSERTING THEN
+        V_ACCION := 'INSERT';
+        V_FECHA_CREACION := SYSDATE;
+    ELSIF UPDATING THEN
+        V_ACCION := 'UPDATE';
+        V_FECHA_MODIFICACION:=SYSDATE;
+    END IF;
+    INSERT INTO PAQUETES_BIT (ID_PAQUETE_BIT, ID_REMITENTE, ID_CLIENTE,FECHA_CREACION, FECHA_MODIFICACION, ACCION, IP)
+    VALUES (
+            SEC_ID_PAQUETE_BIT.NEXTVAL, :NEW.ID_REMITENTE, :NEW.ID_CLIENTE,
+            V_FECHA_CREACION, V_FECHA_MODIFICACION, V_ACCION, FN_GET_IP
+    );
+    END;
+--------------------------------------------------------------------------------------------------------------------------------------------
+
+------------------------------------------------------------------------------------------------------------------------------------------
+--crear la biracora de la tabla SEGUIMIENTOS
+
+CREATE OR REPLACE TRIGGER TRIG_SEGUIMIENTO_PA
+AFTER INSERT OR UPDATE ON REMITENTES FOR EACH ROW
+DECLARE
+ V_ACCION VARCHAR2(10) := '';
+ V_FECHA_CREACION DATE := NULL;
+ V_FECHA_MODIFICACION DATE := NULL;
+BEGIN
+    IF INSERTING THEN
+        V_ACCION := 'INSERT';
+        V_FECHA_CREACION := SYSDATE;
+    ELSIF UPDATING THEN
+        V_ACCION := 'UPDATE';
+        V_FECHA_MODIFICACION:=SYSDATE;
+    END IF;
+    INSERT INTO SEGUIMIENTO_BIT (ID_SEGUIMIENTO_BIT, ID_CLIENTE, ID_REMITENTE, FECHA_CREACION, FECHA_MODIFICACION, ACCION, IP)
+    VALUES (
+            SEC_ID_SEGUIMIENTO_BIT.NEXTVAL, :NEW.ID_CLIENTE, :NEW.ID_REMITENTE,
+            V_FECHA_CREACION, V_FECHA_MODIFICACION, V_ACCION, FN_GET_IP
+    );
+    END;
+------------------------------------------------------------------------------------------------------------------------------------------
