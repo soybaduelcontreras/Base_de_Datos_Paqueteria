@@ -1,0 +1,192 @@
+--Creacion de la tabla CLIENTES
+CREATE TABLE CLIENTES (
+    ID_CLIENTE  NUMBER NOT NULL,
+    NOMBRE      VARCHAR2(30) NOT NULL,
+    APATERNO    VARCHAR2(20) NOT NULL,
+    AMATERNO    VARCHAR2(20),
+    DIRECCION   VARCHAR2(400) NOT NULL,
+    FECHA_ALTA  DATE DEFAULT SYSDATE,
+    CONSTRAINT pk_id_cliente_clientes PRIMARY KEY (ID_CLIENTE)
+);
+COMMENT ON TABLE CLIENTES IS 'Tabla que contiene la informacion de CLIENTES';
+COMMENT ON COLUMN CLIENTES.ID_CLIENTE IS  'LLave primaria de la tabla CLIENTES';
+COMMENT ON COLUMN CLIENTES.NOMBRE IS 'Nombre del Cliente';
+COMMENT ON COLUMN CLIENTES.APATERNO IS 'Apellido Paterno del Cliente';
+COMMENT ON COLUMN CLIENTES.AMATERNO IS 'Apellido Materno del Cliente';
+COMMENT ON COLUMN CLIENTES.DIRECCION IS 'Direccion del Cliente';
+COMMENT ON COLUMN CLIENTES.FECHA_ALTA IS 'Fecha de Alta del Cliente';
+--------------------------------------------------------------------------------------------------------------
+--TABLA DE BITACORA DE CLIENTES
+CREATE TABLE CLIENTES_BIT (
+    ID_CLIENTE_BIT     NUMBER NOT NULL,
+    ID_CLIENTE         NUMBER NOT NULL,
+    NOMBRE             VARCHAR2(30) NOT NULL,
+    APATERNO           VARCHAR2(20) NOT NULL,
+    AMATERNO           VARCHAR2(20),
+    DIRECCION          VARCHAR2(400) NOT NULL,
+    FECHA_ALTA         DATE DEFAULT SYSDATE,
+    FECHA_CREACION     DATE DEFAULT SYSDATE,
+    FECHA_MODIFICACION DATE,
+    ACCION             VARCHAR2(10) NOT NULL,
+    IP                 VARCHAR2(30) NOT NULL,
+    CONSTRAINT pk_id_cliente_bit_clientes_bit PRIMARY KEY (ID_CLIENTE_BIT),
+    CONSTRAINT fk_id_cliente_clientes_bit FOREIGN KEY (ID_CLIENTE) REFERENCES CLIENTES (ID_CLIENTE)
+);
+COMMENT ON TABLE CLIENTES_BIT IS 'Tabla de Bitacora que contiene la informacion del Cliente';
+COMMENT ON COLUMN CLIENTES_BIT.ID_CLIENTE_BIT IS 'LLave primaria de la tabla Clientes_Bit';
+COMMENT ON COLUMN CLIENTES_BIT.ID_CLIENTE IS 'LLave foranea ID_CLIENTE que hace referencia a la tabla CLIENTES';
+COMMENT ON COLUMN CLIENTES_BIT.NOMBRE IS 'Nombre del Cliente';
+COMMENT ON COLUMN CLIENTES_BIT.APATERNO IS 'Apellido Paterno del Cliente';
+COMMENT ON COLUMN CLIENTES_BIT.AMATERNO IS 'Apellido Materno del CLiente';
+COMMENT ON COLUMN CLIENTES_BIT.DIRECCION IS 'Direccion del Cliente';
+COMMENT ON COLUMN CLIENTES_BIT.FECHA_ALTA IS 'Fecha de Alta del Cliente';
+COMMENT ON COLUMN CLIENTES_BIT.FECHA_CREACION IS 'Campo de control que indica la Fecha de Creacion en la BD';
+COMMENT ON COLUMN CLIENTES_BIT.FECHA_MODIFICACION IS 'Campo de control que indica la Fecha de Modificacion en la BD';
+COMMENT ON COLUMN CLIENTES_BIT.ACCION IS 'Campo de control que indica la Accion en el Registro';
+COMMENT ON COLUMN CLIENTES_BIT.IP IS 'Campo de control que indica Ip de donde se solicito la operacion en el registro';
+------------------------------------------------------------------------------------------------------------
+--Creacion de tabla de Remitentes
+CREATE TABLE REMITENTES (
+    ID_REMITENTE  NUMBER NOT NULL,
+    ID_CLIENTE    NUMBER NOT NULL,
+    NOMBRE_R      VARCHAR2(40) NOT NULL,
+    APATERNO_R    VARCHAR2(40) NOT NULL,
+    AMATERNO_R    VARCHAR2(40) NOT NULL,
+
+    CONSTRAINT pk_id_remitente_remitentes PRIMARY KEY (ID_REMITENTE),
+    CONSTRAINT fk_id_cliente_remitentes FOREIGN KEY (ID_CLIENTE) REFERENCES CLIENTES (ID_CLIENTE)
+
+);
+COMMENT ON TABLE REMITENTES IS 'Tabla que contiene la informacion de REMITENTES';
+COMMENT ON COLUMN REMITENTES.ID_REMITENTE IS  'LLave primaria de la tabla REMITENTES';
+COMMENT ON COLUMN REMITENTES.ID_CLIENTE IS 'LLave foranea ID_CLIENTE que hace referencia a la tabla CLIENTES';
+COMMENT ON COLUMN REMITENTES.NOMBRE_R  IS 'Nombre del Remitente';
+COMMENT ON COLUMN REMITENTES.APATERNO_R IS 'Apellido Paterno de Remitente';
+COMMENT ON COLUMN REMITENTES.AMATERNO_R IS 'Apellido Materno de Remitente';
+-------------------------------------------------------------------------------------------------------------
+--Creacion de tabla de Bitacora Remitentes
+CREATE TABLE REMITENTES_BIT (
+    ID_REMITENTE_BIT   NUMBER NOT NULL,
+    ID_REMITENTE       NUMBER NOT NULL,
+    NOMBRE_R           VARCHAR2(40) NOT NULL,
+    APATERNO_R         VARCHAR2(40) NOT NULL,
+    AMATERNO_R         VARCHAR2(40) NOT NULL,
+    FECHA_CREACION     DATE DEFAULT SYSDATE,
+    FECHA_MODIFICACION DATE,
+    ACCION             VARCHAR2(10) NOT NULL,
+    IP                 VARCHAR2(30) NOT NULL,
+    CONSTRAINT pk_id_remitente_bit_remitentes_bit PRIMARY KEY (ID_REMITENTE_BIT),
+    CONSTRAINT fk_id_remitente_remitentes_bit FOREIGN KEY (ID_REMITENTE) REFERENCES REMITENTES (ID_REMITENTE)
+);
+COMMENT ON TABLE REMITENTES_BIT IS 'Tabla que contiene la informacion de REMITENTES';
+COMMENT ON COLUMN REMITENTES_BIT.ID_REMITENTE_BIT IS  'LLave primaria de la tabla REMITENTES_BIT';
+COMMENT ON COLUMN REMITENTES_BIT.ID_REMITENTE IS 'LLave foranea ID_REMITENTE que hace referencia a la tabla REMITENTES';
+COMMENT ON COLUMN REMITENTES_BIT.NOMBRE_R  IS 'Nombre del Remitente';
+COMMENT ON COLUMN REMITENTES_BIT.APATERNO_R IS 'Apellido Paterno de Remitente';
+COMMENT ON COLUMN REMITENTES_BIT.AMATERNO_R IS 'Apellido Materno de Remitente';
+COMMENT ON COLUMN REMITENTES_BIT.FECHA_CREACION IS 'Campo de control que indica la Fecha de Creacion em  la BD';
+COMMENT ON COLUMN REMITENTES_BIT.FECHA_MODIFICACION IS 'Campo de control que indica la Fecha de Modificacion em  la BD';
+COMMENT ON COLUMN REMITENTES_BIT.ACCION IS 'Campo de control que indica la Accion en el Registro';
+COMMENT ON COLUMN REMITENTES_BIT.IP IS 'Campo de control que indica la IP donde se solicito la opreracion en el registro';
+-------------------------------------------------------------------------------------------------------------
+-- TABLA DE PAQUETE
+CREATE TABLE PAQUETES (
+    ID_PAQUETE    NUMBER NOT NULL,
+    ID_REMITENTE  NUMBER NOT NULL,
+    ID_CLIENTE    NUMBER NOT NULL,
+    FECHA_ALTA    DATE DEFAULT SYSDATE,
+    CONSTRAINT pk_id_paquete_paquetes PRIMARY KEY(ID_PAQUETE),
+    CONSTRAINT fk_id_remitente_paquetes FOREIGN KEY (ID_REMITENTE) REFERENCES REMITENTES (ID_REMITENTE),
+    CONSTRAINT fk_id_cliente_paquetes FOREIGN KEY (ID_CLIENTE) REFERENCES CLIENTES (ID_CLIENTE)
+);
+COMMENT ON TABLE PAQUETES IS 'Tabla que contiene la informacion de PAQUETES';
+COMMENT ON COLUMN PAQUETES.ID_PAQUETE IS  'LLave primaria de la tabla PAQUETES';
+COMMENT ON COLUMN PAQUETES.ID_REMITENTE IS 'Llave foranea de la tabla REMITENTES';
+COMMENT ON COLUMN PAQUETES.ID_CLIENTE  IS 'Llave foranea de la tabla CLIENTES';
+COMMENT ON COLUMN PAQUETES.FECHA_ALTA IS 'Fecha de Alta del PAQUETE';
+
+-- Creacion de tabla de Bitacora de PAQUETE_BIT
+CREATE TABLE PAQUETES_BIT (
+    ID_PAQUETE_BIT     NUMBER NOT NULL,
+    ID_PAQUETE         NUMBER NOT NULL,
+    ID_REMITENTE       NUMBER NOT NULL,
+    ID_CLIENTE         NUMBER NOT NULL,
+    FECHA_ALTA         DATE DEFAULT SYSDATE,
+    FECHA_CREACION     DATE DEFAULT SYSDATE,
+    FECHA_MODIFICACION DATE,
+    ACCION             VARCHAR2(10) NOT NULL,
+    IP                 VARCHAR2(30) NOT NULL,
+    CONSTRAINT pk_id_paquete_bit_paquetes_bit PRIMARY KEY (ID_PAQUETE_BIT),
+    CONSTRAINT fk_id_paquete_paquetes_bit FOREIGN KEY(ID_PAQUETE) REFERENCES PAQUETES (ID_PAQUETE),
+    CONSTRAINT fk_id_remitente_paquetes_bit FOREIGN KEY (ID_REMITENTE) REFERENCES REMITENTES (ID_REMITENTE),
+    CONSTRAINT fk_id_cliente_paquetes_bit FOREIGN KEY (ID_CLIENTE) REFERENCES CLIENTES (ID_CLIENTE)
+);
+COMMENT ON TABLE PAQUETES_BIT IS 'Tabla de Bitacora que contiene la informacion del PAQUETES';
+COMMENT ON COLUMN PAQUETES_BIT.ID_PAQUETE_BIT IS 'LLave primaria de la tabla PAQUETE_BIT';
+COMMENT ON COLUMN PAQUETES_BIT.ID_PAQUETE IS 'LLave foranea ID_PAQUETE que hace referencia a la tabla PAQUETES';
+COMMENT ON COLUMN PAQUETES_BIT.ID_REMITENTE IS 'LLave foranea ID_REMITENTE que hace referencia a la tabla REMITENTES';
+COMMENT ON COLUMN PAQUETES_BIT.ID_CLIENTE IS 'LLave foranea ID_CLIENTE que hace referencia a la tabla CLIENTES';
+COMMENT ON COLUMN PAQUETES_BIT.FECHA_ALTA IS 'Fecha de Alta del PAQUETE';
+COMMENT ON COLUMN PAQUETES_BIT.FECHA_CREACION IS 'Campo de control que indica la Fecha de Creacion em  la BD';
+COMMENT ON COLUMN PAQUETES_BIT.FECHA_MODIFICACION IS 'Campo de control que indica la Fecha de Modificacion en la BD';
+COMMENT ON COLUMN PAQUETES_BIT.ACCION IS 'Campo de control que indica la Accion en el Registro';
+COMMENT ON COLUMN PAQUETES_BIT.IP IS 'Campo de control que indica Ip de donde se solicito la operacion en el registro';
+------------------------------------------------------------------------------------------------------
+-- TABLA DE SEGUIMIENTO
+CREATE TABLE SEGUIMIENTO (
+    ID_SEGUIMIENTO NUMBER NOT NULL,
+    ID_PAQUETE     NUMBER NOT NULL,
+    ID_CLIENTE     NUMBER NOT NULL,
+    ID_REMITENTE   NUMBER NOT NULL,
+    NUMERO_GUIA    NUMBER NOT NULL,
+    ESTATUS        VARCHAR2(40) NOT NULL,
+    FECHA_ALTA     DATE DEFAULT SYSDATE,
+    CONSTRAINT pk_id_seguimiento_seguimiento PRIMARY KEY (ID_SEGUIMIENTO),
+    CONSTRAINT fk_id_paquete_seguimiento FOREIGN KEY (ID_PAQUETE) REFERENCES PAQUETES (ID_PAQUETE),
+    CONSTRAINT fk_id_cliente_seguimiento FOREIGN KEY (ID_CLIENTE) REFERENCES CLIENTES (ID_CLIENTE),
+    CONSTRAINT fk_id_remitente_seguimiento FOREIGN KEY (ID_REMITENTE) REFERENCES REMITENTES (ID_REMITENTE)
+);
+COMMENT ON TABLE SEGUIMIENTO IS 'Tabla que contiene la informacion de SEGUIMIENTO';
+COMMENT ON COLUMN SEGUIMIENTO.ID_SEGUIMIENTO IS  'LLave primaria de la tabla SEGUIMIENTO';
+COMMENT ON COLUMN SEGUIMIENTO.ID_PAQUETE IS 'LLave foranea ID_PAQUETE que hace referencia a la tabla PAQUETES';
+COMMENT ON COLUMN SEGUIMIENTO.ID_CLIENTE IS 'LLave foranea ID_CLIENTE que hace referencia a la tabla CLIENTES';
+COMMENT ON COLUMN SEGUIMIENTO.ID_REMITENTE  IS 'LLave foranea ID_REMITENTE que hace referencia a la tabla REMITENTES';
+COMMENT ON COLUMN SEGUIMIENTO.NUMERO_GUIA IS 'Numero de GUIA de envio del PAQUETE';
+COMMENT ON COLUMN SEGUIMIENTO.ESTATUS IS 'Estado del seguimiento del PAQUETE';
+COMMENT ON COLUMN SEGUIMIENTO.FECHA_ALTA IS 'Fecha de Alta del ESTATUS DE SEGUIMIENTO';
+------------------------------------------------------------------------------------------------------------
+--Creacion de tabla de Bitacora de Seguimiento
+
+CREATE TABLE SEGUIMIENTO_BIT (
+    ID_SEGUIMIENTO_BIT NUMBER NOT NULL,
+    ID_SEGUIMIENTO     NUMBER NOT NULL,
+    ID_PAQUETE         NUMBER NOT NULL,
+    ID_CLIENTE         NUMBER NOT NULL,
+    ID_REMITENTE       NUMBER NOT NULL,
+    NUMERO_GUIA        NUMBER NOT NULL,
+    ESTATUS            VARCHAR2(40) NOT NULL,
+    FECHA_ALTA         DATE DEFAULT SYSDATE,
+    FECHA_CREACION     DATE DEFAULT SYSDATE,
+    FECHA_MODIFICACION DATE,
+    ACCION             VARCHAR2(10) NOT NULL,
+    IP                 VARCHAR2(30) NOT NULL,
+    CONSTRAINT pk_id_seguimiento_bit_seguimiento_bit PRIMARY KEY (ID_SEGUIMIENTO_BIT),
+    CONSTRAINT fk_id_seguimiento_seguimiento_bit FOREIGN KEY (ID_SEGUIMIENTO) REFERENCES SEGUIMIENTO (ID_SEGUIMIENTO),
+    CONSTRAINT fk_id_paquete_seguimiento_bit FOREIGN KEY (ID_PAQUETE) REFERENCES PAQUETES (ID_PAQUETE),
+    CONSTRAINT fk_id_cliente_seguimiento_bit FOREIGN KEY (ID_CLIENTE) REFERENCES CLIENTES (ID_CLIENTE),
+    CONSTRAINT fk_id_remitente_seguimiento_bit FOREIGN KEY (ID_REMITENTE) REFERENCES REMITENTES (ID_REMITENTE)
+);
+COMMENT ON TABLE SEGUIMIENTO_BIT IS 'Tabla que contiene la informacion de SEGUIMIENTO_BIT';
+COMMENT ON COLUMN SEGUIMIENTO_BIT.ID_SEGUIMIENTO_BIT IS  'LLave primaria de la tabla SEGUIMIENTO_BIT';
+COMMENT ON COLUMN SEGUIMIENTO_BIT.ID_SEGUIMIENTO IS  'LLave foranea de la tabla SEGUIMINETO';
+COMMENT ON COLUMN SEGUIMIENTO_BIT.ID_PAQUETE IS 'LLave foranea ID_PAQUETE que hace referencia a la tabla PAQUETES';
+COMMENT ON COLUMN SEGUIMIENTO_BIT.ID_CLIENTE IS 'Llave foranea ID_CLIENTE que hace referencia a la tabla CLIENTES';
+COMMENT ON COLUMN SEGUIMIENTO_BIT.ID_REMITENTE  IS 'LLave foranea ID_REMITENTE que hace referencia a la tabla REMITENTES';
+COMMENT ON COLUMN SEGUIMIENTO_BIT.NUMERO_GUIA IS 'Numero de GUIA de envio del PAQUETE';
+COMMENT ON COLUMN SEGUIMIENTO_BIT.ESTATUS IS 'Estado del seguimiento del PAQUETE';
+COMMENT ON COLUMN SEGUIMIENTO_BIT.FECHA_ALTA IS 'Fecha de Alta del ESTATUS DE SEGUIMIENTO';
+COMMENT ON COLUMN SEGUIMIENTO_BIT.FECHA_CREACION IS 'Campo de control que indica la Fecha de Creacion em  la BD';
+COMMENT ON COLUMN SEGUIMIENTO_BIT.FECHA_MODIFICACION IS 'Campo de control que indica la Fecha de Modificacion em  la BD';
+COMMENT ON COLUMN SEGUIMIENTO_BIT.ACCION IS 'Campo de control que indica la Accion en el Registro';
+COMMENT ON COLUMN SEGUIMIENTO_BIT.IP IS 'Campo de control que indica la IP donde se solicito la opreracion en el registro';
+
