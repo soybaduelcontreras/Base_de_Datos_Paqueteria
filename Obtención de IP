@@ -1,0 +1,11 @@
+create FUNCTION FN_GET_IP
+RETURN VARCHAR2
+IS
+BEGIN
+    -- Intento de obtener IP del host que hace conexion
+    RETURN NVL(SYS_CONTEXT('USERENV', 'IP_ADDRESS'), SYS_CONTEXT('USERENV', 'HOST'));
+    EXCEPTION
+      WHEN  OTHERS THEN
+        RETURN 'LOCALHOST';
+END FN_GET_IP;
+/
