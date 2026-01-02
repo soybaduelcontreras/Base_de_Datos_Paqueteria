@@ -1,0 +1,31 @@
+--FUNCION PARA GENERAR ESTATUS DE ENVIO
+
+CREATE OR REPLACE FUNCTION FN_ESTATUS_PAQUETERIA (
+    p_id_cliente IN NUMBER,
+    p_id_paquete IN NUMBER
+) RETURN VARCHAR2 IS
+    v_estatus_num NUMBER;
+    v_resultado   VARCHAR2(50);
+BEGIN
+    -- Obtenemos el código numérico del estatus desde la tabla
+    SELECT estatus INTO v_estatus_num
+    FROM SEGUIMIENTO
+    WHERE id_cliente = p_id_cliente
+      AND id_paquete = p_id_paquete;
+
+    -- Evaluamos el estatus con una estructura CASE
+    v_resultado := CASE v_estatus_num
+        WHEN 1 THEN 'PENDIENTE DE ENVIO'
+        WHEN 2 THEN 'ENVIADO'
+        WHEN 3 THEN 'ENTREGADO'
+        ELSE 'ESTATUS DESCONOCIDO'
+    END;
+
+    RETURN v_resultado;
+
+EXCEPTION
+    WHEN NO_DATA_FOUND THEN
+        RETURN 'ERROR: PAQUETE NO ENCONTRADO';
+    WHEN OTHERS THEN
+        RETURN 'ERROR EN CONSULTA';
+END FN_ESTATUS_PAQUETERIA;
